@@ -99,14 +99,16 @@ create table if not exists social_determinants(
     PRIMARY KEY (id)
 );
 """
+
 table_pat_determinants = """
-create table if not exists patient_determinants(
-    id int auto increment,
-    mrn varchar(255),
+create table if not exists patient_determinants (
+    id int auto_increment,
+    mrn varchar(255) Ddefault null,
     COMPONENT varchar(255) default null,
+    PRIMARY KEY (id),
     FOREIGN KEY (mrn) REFERENCES patients(mrn) ON DELETE CASCADE,
-    FOREIGN KEY (COMPONENT) REFERENCES social_determinants(COMPONENTS) ON DELETE CASCADE
-);
+    FOREIGN KEY (COMPONENT) REFERENCES social_determinants(COMPONENT) ON DELETE CASCADE
+); 
 """
 
 db_azure.execute(table_patients)
