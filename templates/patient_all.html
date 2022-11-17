@@ -42,11 +42,8 @@
                         <th>MRN</th>
                         <th>First Name</th>
                         <th>Last Name</th>
-                        <th>Zip Code</th>
                         <th>Gender</th>
                         <th>DOB</th>
-                        <th>Contact Home</th>
-                        <th>Contact Mobile</th>
                         <th>Setting</th>
 
                     </tr>
@@ -58,11 +55,8 @@
                         <td>{{row.mrn}}</td>
                         <td>{{row.first_name}}</td>
                         <td>{{row.last_name}}</td>
-                        <td>{{row.zip_code}} </td>
                         <td>{{row.gender}}</td>
                         <td>{{row.dob}}</td>
-                        <td>{{row.contact_home}} </td>
-                        <td>{{row.contact_mobile}}</td>
                         <td>
                             <a href="/update/{{row.mrn}}" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#modaledit{{row.mrn}}">Edit</a>
                             <a href="/delete/{{row.mrn}}" class="btn btn-danger btn-xs" onclick="return confirm('Are You Sure To Delete ?')">Delete</a>
@@ -159,10 +153,6 @@
                             <div class="form-group">
                                 <label>Last Name:</label>
                                 <input type="text" class="form-control" name="last_name" required="1">
-                            </div>
-                            <div class="form-group">
-                                <label>Zip Code </label>
-                                <input type="text" class="form-control" name="zip_code" required="1">
                             </div>
                             <div class="form-group">
                                 <label> Gender </label>

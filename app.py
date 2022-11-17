@@ -13,6 +13,7 @@ db = SQLAlchemy()
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqldb://' + mysql_username + ':' + mysql_password + '@' + mysql_host + ':3306/portal'
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = 'chickenwing'
 
@@ -27,22 +28,17 @@ class Patients(db.Model):
     mrn = db.Column(db.String(255))
     first_name = db.Column(db.String(255))
     last_name = db.Column(db.String(255))
-    zip_code = db.Column(db.String(255), nullable=True)
     gender = db.Column(db.String(255), nullable=True)
     dob = db.Column(db.String(255), nullable=True)
-    contact_mobile = db.Column(db.String(255), nullable=True)
-    contact_home = db.Column(db.String(255), nullable=True)
 
     # this first function __init__ is to establish the class for python GUI
     def __init__(self, mrn, first_name, last_name, zip_code, gender):
         self.mrn = mrn
         self.first_name = first_name
         self.last_name = last_name
-        self.zip_code = zip_code
         self.gender = gender
         self.dob = dob
-        self.contact_mobile = contact_mobile
-        self.contact_home = contact_home
+
 
     # this second function is for the API endpoints to return JSON 
     def to_json(self):
@@ -51,11 +47,8 @@ class Patients(db.Model):
             'mrn': self.mrn,
             'first_name': self.first_name,
             'last_name': self.last_name,
-            'zip_code': self.zip_code,
             'gender': self.gender,
-            'dob' : self.dob,
-            'contact_mobile' : self.contact_mobile,
-            'contact_home' : self.contact_home
+            'dob' : self.dob,           
         }
 
 class Conditions_patient(db.Model):
@@ -143,12 +136,10 @@ class Procedures_patient(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     mrn = db.Column(db.String(255), db.ForeignKey('patients.mrn'))
-    CPT_description = db.Column(db.String(255), db.ForeignKey('procedures.CPT_description'))
 
     # this first function __init__ is to establish the class for python GUI
     def __init__(self, mrn, med_ndc):
         self.mrn = mrn
-        self.CPT_description = CPT_description
 
     # this second function is for the API endpoints to return JSON
     def to_json(self):
@@ -179,9 +170,13 @@ class Procedures(db.Model):
         }
 
 #### BASIC ROUTES WITHOUT DATA PULSL FOR NOW ####
-@app.route('/home')
+@app.route('/')
 def index():
     return render_template('home.html')
+
+@app.route('/portal')
+def index():
+    return render_template('portalhome.html')
 
 @app.route('/signin')
 def signin():
@@ -203,11 +198,8 @@ def insert(): # note this function needs to match name in html form action
         first_name = request.form['first_name']
         last_name = request.form['last_name']
         gender = request.form['gender']
-        zip_code = request.form['zip_code']
         dob = request.form['dob']
-        contact_home = request.form['contact_home']
-        contact_mobile = request.form['contact_mobile']
-        new_patient = Patients(mrn, first_name, last_name, gender, zip_code)
+        new_patient = Patients(mrn, first_name, last_name, gender, dob)
         db.session.add(new_patient)
         db.session.commit()
         flash("Patient Inserted Successfully")
