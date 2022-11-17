@@ -14,7 +14,7 @@ app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqldb://' + mysql_username + ':' + mysql_password + '@' + mysql_host + ':3306/patients'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key = 'sdf#$#dfjkhdf0SDJH0df9fd98343fdfu34rf'
+app.secret_key = 'chickenwing'
 
 db.init_app(app)
 

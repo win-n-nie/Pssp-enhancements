@@ -103,7 +103,7 @@ create table if not exists social_determinants(
 table_pat_determinants = """
 create table if not exists patient_determinants(
     id int auto_increment,
-    mrn varchar(255) Ddefault null,
+    mrn varchar(255) default null,
     COMPONENT varchar(255) default null,
     PRIMARY KEY (id),
     FOREIGN KEY (mrn) REFERENCES patients(mrn) ON DELETE CASCADE,
