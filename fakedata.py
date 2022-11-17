@@ -61,18 +61,7 @@ loinc = pd.read_csv('/Users/wendyarias/Desktop/GitHub/cloud-managed-MySQL/Loinc.
 list(loinc.columns)
 shortloinc= loinc[['LOINC_NUM', 'COMPONENT']]
 LOINCnew = shortloinc.sample(n=50)
-insertQuery = "INSERT INTO social_determinants (LOINC_NUM, COMPONENT) VALUES (%s, %s)"
-startingRow = 0
-for index, row in LOINCnew.iterrows():
-    startingRow += 1
-    print('startingRow: ', startingRow)
-    # db_azure.execute(insertQuery, (row['CodeWithSeparator'], row['ShortDescription']))
-    print("inserted row db_azure: ", index)
-    db_azure.execute(insertQuery, (row['LOINC_NUM'], row['COMPONENT']))
-    print("inserted row db_gcp: ", index)
-    ## stop once we have 100 rows
-    if startingRow == 60:
-        break
+
 
 ### INSERTING FAKE DATA 
 
@@ -86,22 +75,6 @@ for index, row in df_fake_patients.iterrows():
 
 
 ########## INSERTING IN FAKE MEDICATIONS ##########
-
-
-insertQuery = "INSERT INTO medications (med_ndc, med_human_name) VALUES (%s, %s)"
-
-medRowCount = 0
-for index, row in ndc_codes_1k.iterrows():
-    medRowCount += 1
-    # db_azure.execute(insertQuery, (row['PRODUCTNDC'], row['NONPROPRIETARYNAME']))
-    db_azure.execute(insertQuery, (row['PRODUCTNDC'], row['NONPROPRIETARYNAME']))
-    print("inserted row: ", index)
-    ## stop once we have 50 rows
-    if medRowCount == 75:
-        break
-
-
-
 
 #### INSERTING IN FAKE PATIENT MEDICATIONS
 
@@ -125,20 +98,19 @@ for index, row in df_patient_medications.iterrows():
     db_azure.execute(insertQuery, (row['mrn'], row['med_ndc']))
     print("inserted row: ", index)
 
+insertQuery = "INSERT INTO medications (med_ndc, med_human_name) VALUES (%s, %s)"
+
+medRowCount = 0
+for index, row in ndc_codes_1k.iterrows():
+    medRowCount += 1
+    # db_azure.execute(insertQuery, (row['PRODUCTNDC'], row['NONPROPRIETARYNAME']))
+    db_azure.execute(insertQuery, (row['PRODUCTNDC'], row['NONPROPRIETARYNAME']))
+    print("inserted row: ", index)
+    ## stop once we have 50 rows
+    if medRowCount == 75:
+        break
+
 ##INSERTING CONDITIONS
-
-df_pat_condition = pd.read_sql_query("SELECT mrn FROM patients", db_azure)
-df_condition = pd.read_sql_query("SELECT icd10_code FROM conditions", db_azure) 
-# create a dataframe that is stacked and give each patient a random number of medications between 1 and 5
-df_patient_conditions = pd.DataFrame(columns=['mrn', 'icd10_code'])
-# for each patient in df_patient_medications, take a random number of medications between 1 and 10 from df_medications and palce it in df_patient_medications
-for index, row in df_pat_condition.iterrows():
-    numCondition = random.randint(1, 5)
-    df_con_sample = df_condition.sample(n=numCondition)
-    df_con_sample['mrn'] = row['mrn']
-    # append the df_medications_sample to df_patient_medications
-    df_patient_conditions = df_patient_conditions.append(df_con_sample)
-
 insertQuery = "INSERT INTO conditions (icd10_code, icd10_description) VALUES (%s, %s)"
 
 startingRow = 0
@@ -154,6 +126,20 @@ for index, row in icd10codesShort_1k.iterrows():
         break
 
 ### INSERTING IN PATIENT CONDITIONS
+df_pat_condition = pd.read_sql_query("SELECT mrn FROM patients", db_azure)
+df_condition = pd.read_sql_query("SELECT icd10_code FROM conditions", db_azure) 
+# create a dataframe that is stacked and give each patient a random number of medications between 1 and 5
+df_patient_conditions = pd.DataFrame(columns=['mrn', 'icd10_code'])
+# for each patient in df_patient_medications, take a random number of medications between 1 and 10 from df_medications and palce it in df_patient_medications
+for index, row in df_pat_condition.iterrows():
+    numCondition = random.randint(1, 5)
+    df_con_sample = df_condition.sample(n=numCondition)
+    df_con_sample['mrn'] = row['mrn']
+    # append the df_medications_sample to df_patient_medications
+    df_patient_conditions = df_patient_conditions.append(df_con_sample)
+
+
+
 insertQuery = "INSERT INTO patient_conditions (mrn, icd10_code) VALUES (%s, %s)"
 
 for index, row in df_patient_conditions.iterrows():
@@ -163,18 +149,10 @@ for index, row in df_patient_conditions.iterrows():
 
 
 
+
+
+
 #### PROCEDURES
-df_pat_procedure = pd.read_sql_query("SELECT mrn FROM patients", db_azure)
-df_procedure = pd.read_sql_query("SELECT CPT_description FROM procedures", db_azure) 
-# create a dataframe that is stacked and give each patient a random number of medications between 1 and 5
-df_patient_procedures = pd.DataFrame(columns=['mrn', 'CPT_description'])
-# for each patient in df_patient_medications, take a random number of medications between 1 and 10 from df_medications and palce it in df_patient_medications
-for index, row in df_pat_procedure.iterrows():
-    numProcedure = random.randint(1, 5)
-    df_proc_sample = df_procedure.sample(n=numProcedure)
-    df_proc_sample['mrn'] = row['mrn']
-    # append the df_medications_sample to df_patient_medications
-    df_patient_procedures = df_patient_procedures.append(df_proc_sample)
 
 insertQuery = "INSERT procedures (CPT_code, CPT_description) VALUES (%s, %s)"
 startingRow = 0
@@ -190,11 +168,38 @@ for index, row in newCPTcode.iterrows():
         break
 
 ### PATIENT PROCEDURES
+df_pat_procedure = pd.read_sql_query("SELECT mrn FROM patients", db_azure)
+df_procedure = pd.read_sql_query("SELECT CPT_description FROM procedures", db_azure) 
+# create a dataframe that is stacked and give each patient a random number of medications between 1 and 5
+df_patient_procedures = pd.DataFrame(columns=['mrn', 'CPT_description'])
+# for each patient in df_patient_medications, take a random number of medications between 1 and 10 from df_medications and palce it in df_patient_medications
+for index, row in df_pat_procedure.iterrows():
+    numProcedure = random.randint(1, 5)
+    df_proc_sample = df_procedure.sample(n=numProcedure)
+    df_proc_sample['mrn'] = row['mrn']
+    # append the df_medications_sample to df_patient_medications
+    df_patient_procedures = df_patient_procedures.append(df_proc_sample)
 insertQuery = "INSERT INTO patient_procedures (mrn, CPT_description) VALUES (%s, %s)"
 
 for index, row in df_patient_procedures.iterrows():
     db_azure.execute(insertQuery, (row['mrn'], row['CPT_description']))
     print("inserted row: ", index)
 
+### SOCIAL DETERMINANTS
+insertQuery = "INSERT INTO social_determinants (LOINC_NUM, COMPONENT) VALUES (%s, %s)"
+startingRow = 0
+for index, row in LOINCnew.iterrows():
+    startingRow += 1
+    print('startingRow: ', startingRow)
+    # db_azure.execute(insertQuery, (row['CodeWithSeparator'], row['ShortDescription']))
+    print("inserted row db_azure: ", index)
+    db_azure.execute(insertQuery, (row['LOINC_NUM'], row['COMPONENT']))
+    print("inserted row db_gcp: ", index)
+    ## stop once we have 100 rows
+    if startingRow == 60:
+        break
 
+df_pat_determinant = pd.read_sql_query("SELECT mrn FROM patients", db_azure)
+soc_determinant = pd.read_sql_query("SELECT component FROM social_determinants", db_azure)
+patient_det = pd.DataFrame(columns=['mrn', 'COMPONENT'])
 
