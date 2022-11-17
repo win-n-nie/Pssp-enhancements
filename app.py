@@ -29,6 +29,7 @@ class Patients(db.Model):
     first_name = db.Column(db.String(255))
     last_name = db.Column(db.String(255))
     gender = db.Column(db.String(255), nullable=True)
+    zip_code = db.Column(db.String(255), nullable=True)
     dob = db.Column(db.String(255), nullable=True)
 
     # this first function __init__ is to establish the class for python GUI
@@ -37,7 +38,8 @@ class Patients(db.Model):
         self.first_name = first_name
         self.last_name = last_name
         self.gender = gender
-        self.dob = dob
+        self.zipcode = zip_code
+        self.DOB = dob
 
 
     # this second function is for the API endpoints to return JSON 
@@ -48,7 +50,8 @@ class Patients(db.Model):
             'first_name': self.first_name,
             'last_name': self.last_name,
             'gender': self.gender,
-            'dob' : self.dob,           
+            'zip_code': self.zipcode,
+            'dob' : self.DOB          
         }
 
 class Conditions_patient(db.Model):
@@ -136,10 +139,12 @@ class Procedures_patient(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     mrn = db.Column(db.String(255), db.ForeignKey('patients.mrn'))
+    CPT_description = db.Column(db.String(255))
 
     # this first function __init__ is to establish the class for python GUI
     def __init__(self, mrn, med_ndc):
         self.mrn = mrn
+        self.CPT_description = CPT_description
 
     # this second function is for the API endpoints to return JSON
     def to_json(self):
@@ -170,14 +175,12 @@ class Procedures(db.Model):
         }
 
 #### BASIC ROUTES WITHOUT DATA PULSL FOR NOW ####
-@app.route('/')
-def index():
-    return render_template('home.html')
-
+@app.route('/home')
+def home():
+    return render_template('mercy.html')
 @app.route('/portal')
 def index():
     return render_template('portalhome.html')
-
 @app.route('/signin')
 def signin():
     return render_template('/signin.html')
