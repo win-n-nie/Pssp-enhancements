@@ -99,19 +99,22 @@ class Medications_patient(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     mrn = db.Column(db.String(255), db.ForeignKey('patients.mrn'))
-    med_ndc = db.Column(db.String(255), db.ForeignKey('medications.med_ndc'))
+    med_human_name = db.Column(db.String(255), db.ForeignKey('medication.med_human_name'))
+    med_ndc = db.Column(db.String(255))
 
     # this first function __init__ is to establish the class for python GUI
     def __init__(self, mrn, med_ndc):
         self.mrn = mrn
         self.med_ndc = med_ndc
+        self.med_human_name = med_human_name
 
     # this second function is for the API endpoints to return JSON
     def to_json(self):
         return {
             'id': self.id,
             'mrn': self.mrn,
-            'med_ndc': self.med_ndc
+            'med_ndc': self.med_ndc,
+            'med_human_name': self.med_human_name
         }
     
 class Medications(db.Model):
@@ -175,7 +178,7 @@ class Procedures(db.Model):
         }
 
 #### BASIC ROUTES WITHOUT DATA PULSL FOR NOW ####
-@app.route('/home')
+@app.route('/')
 def home():
     return render_template('mercy.html')
 @app.route('/portal')
@@ -183,8 +186,10 @@ def index():
     return render_template('portalhome.html')
 @app.route('/signin')
 def signin():
-    return render_template('/signin.html')
-
+    return render_template('signin.html')
+@app.route('/about')
+def about():
+    return render_template('about.html')
 
 
 ##### CREATE BASIC GUI FOR CRUD #####

@@ -1,13 +1,17 @@
 {% extends 'base.html' %}
+{% include 'header.html' %}
+{% block title %} Home {% endblock %}
+{% block body %}
 
-{% block title%}About page{% endblock %}
-
-{% block content %}
-
-<h1>About page</h1>
-
-<p>
-    This is about page
-</p>
-
+<div class="card text-center" >
+    <div class="card-header">
+      Quote from a happy patient
+    </div>
+    <div class="card-body">
+      <blockquote class="blockquote mb-0">
+        <p>The most wonderful hospital to be sick in.</p>
+        <footer class="blockquote-footer">Micheal Scott <cite title="Source Title">N.Y Times</cite></footer>
+      </blockquote>
+    </div>
+  </div>
 {% endblock %}
