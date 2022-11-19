@@ -465,7 +465,7 @@ def get_patient_details(mrn):
     db_conditions = Conditions.query.all()
     db_medications = Medications.query.all()
     db_procedures = Procedures.query.all()
-    return render_template("patient_details.html", patient_details = patient_details, 
+    return render_template("pat_det2.html", patient_details = patient_details, 
         patient_conditions = patient_conditions, patient_medications = patient_medications,
         patient_procedures = patient_procedures,
         db_conditions = db_conditions, db_medications = db_medications, db_procedures = db_procedures)
@@ -522,17 +522,6 @@ def create_patient():
     db.session.commit()
     return jsonify(patient.to_json()), 201
 
-@app.route('/api/conditions', methods=['POST'])
-def add_condition():
-    if not request.json:
-        abort(400)
-    condition = Conditions(
-        mrn=request.json.get('mrn'),
-        icd10_description=request.json.get('icd10_description')
-    )
-    db.session.add(condition)
-    db.session.commit()
-    return jsonify(condition.to_json()), 201
 ##### BASIC PUT ROUTES ##### [updating existing data]
 # update patient 
 @app.route('/api/patient/<string:mrn>', methods=['PUT'])
