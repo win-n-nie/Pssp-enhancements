@@ -1,3 +1,7 @@
+{% extends 'base.html' %}
+{% include 'header.html' %}
+{% block title %} Home {% endblock %}
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -68,23 +72,23 @@
     <!-- Custom styles for this template -->
     <!-- <link href="signin.css" rel="stylesheet"> -->
     <link rel="stylesheet" href="{{ url_for('static', filename='signin.css') }}"> 
-
+    {% block body %} 
   </head>
   <body class="text-center">
     
-<main class="form-signin w-100 m-auto">
+<main class="form-signin w-50 m-auto">
 
   <form action="{{ url_for('login') }}" method="post">
     <h1 class="h3 mb-3 fw-normal">Login</h1>
 
     <div class="form-floating" style="padding: .2em">
-      <input type="text" class="form-control" id="username" name="username">
       <label for="floatingInput">Username</label>
+      <input type="text" class="form-control" id="username" name="username">
     </div>
 
     <div class="form-floating" style="padding: .2em">
-      <input type="password" class="form-control" id="password" name="password">
       <label for="floatingPassword">Password</label>
+      <input type="password" class="form-control" id="password" name="password">
     </div>
 
     <div class="msg">{{ msg }}</div>
@@ -104,3 +108,4 @@
 </main>
   </body>
 </html>
+{% endblock %}

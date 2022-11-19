@@ -20,7 +20,7 @@ the second container is for vitals, the third container is for allergies, and th
                         <div class="col md-6">
                             <h3> Demographics </h3>
                             <hr>
-                            <table class="table table-hover table-dark">
+                            <table class="table table-hover table-light">
                                 <tr>
                                     <th>ID</th>
                                     <td>{{patient_details.id}}</td>
@@ -51,7 +51,7 @@ the second container is for vitals, the third container is for allergies, and th
                         <div class="col md-6">
                             <h3> Conditions </h3>
                             <hr>
-                            <table class="table table-hover table-dark">
+                            <table class="table table-hover table-light">
 
                                 {% for row in patient_conditions %}
 
@@ -140,7 +140,7 @@ the second container is for vitals, the third container is for allergies, and th
                         <div class="col md-6">
                             <h3> Medications </h3>
                             <hr>
-                            <table class="table table-hover table-dark">
+                            <table class="table table-hover table-light">
                                 <tr>
                                     <th>Medication Code</th>
                                     {% for x in patient_medications %}
@@ -157,7 +157,7 @@ the second container is for vitals, the third container is for allergies, and th
                         <div class="col md-6">
                             <h3> Procedures </h3>
                             <hr>
-                            <table class="table table-hover table-dark">
+                            <table class="table table-hover table-light">
                                 <tr>
                                     {% for x in patient_procedures %}
                                     <td>{{x.CPT_description}}</td>

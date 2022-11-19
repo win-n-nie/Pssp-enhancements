@@ -1,3 +1,8 @@
+{% extends 'base.html' %}
+{% include 'header.html' %}
+{% block title %} Home {% endblock %}
+
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -68,11 +73,11 @@
     <!-- Custom styles for this template -->
     <!-- <link href="signin.css" rel="stylesheet"> -->
     <link rel="stylesheet" href="{{ url_for('static', filename='signin.css') }}"> 
-
+    {% block body %} 
   </head>
   <body class="text-center">
     
-<main class="form-signin w-100 m-auto">
+<main class="form-signin w-50 m-auto">
 
   <form action="{{ url_for('register_patient') }}" method="post">
 
@@ -81,26 +86,26 @@
 
     <!-- first name -->
     <div class="form-floating" style="padding: .2em">
-        <input type="text" class="form-control" id="first_name" name="first_name" required>
-        <label for="floatingInput">First Name</label>
+      <label for="floatingInput">First Name</label>
+      <input type="text" class="form-control" id="first_name" name="first_name" required>
     </div>
 
     <!-- last name -->
     <div class="form-floating" style="padding: .2em">
+      <label for="floatingInput">Last Name</label>
         <input type="text" class="form-control" id="last_name" name="last_name" required>
-        <label for="floatingInput">Last Name</label>
     </div>
 
     <!-- zip code -->
     <div class="form-floating" style="padding: .2em">
+      <label for="floatingInput">Zip Code</label>
         <input type="text" class="form-control" id="zip_code" name="zip_code" required>
-        <label for="floatingInput">Zip Code</label>
     </div>
 
     <!-- bootstrap calendar selector for date of birth -->
     <div class="form-floating" style="padding: .2em">
+      <label for="floatingInput">Date of Birth</label>
         <input type="date" class="form-control" id="dob" name="dob" required>
-        <label for="floatingInput">Date of Birth</label>
     </div>
 
     <!-- create single select for sex -->
@@ -116,48 +121,38 @@
 
     <!-- create a drop down of conditions that is multi-select for the patient to choose between -->
     <!-- this brings in the conditions object and loops through -->
-    <label for="floatingSelect" style="margin-bottom: 0; margin-top: 1em">Conditions</label>
-    <div class="form-floating" style="padding-top: 1em; padding-bottom:1em">
-        <select class="form-select" 
-        id="conditions" name="conditions" multiple aria-label="multiple select example" style="font-size: large; width: auto; height: auto;" >
-          {% for condition in conditions %}
-            <option value="{{ condition.icd10_code }}">{{ condition.icd10_description }}</option>
-          {% endfor %}
-        </select>
-    </div>
-
-
+  
 
 
 
     <!-- mobile phone  -->
     <div class="form-floating" style="padding: .2em">
+      <label for="floatingInput">Phone Number (mobile) </label>
         <input type="text" class="form-control" id="contact_mobile" name="contact_mobile" required>
-        <label for="floatingInput">Phone Number (mobile) </label>
     </div>
 
     <!-- home phone -->
     <div class="form-floating" style="padding: .2em">
+      <label for="floatingInput">Phone Number (home) </label>
         <input type="text" class="form-control" id="contact_home" name="contact_home" required>
-        <label for="floatingInput">Phone Number (mobile) </label>
     </div> 
 
     <!-- email -->
     <div class="form-floating" style="padding: .2em">
-      <input type="email" class="form-control" id="email" name="email" required>
       <label for="floatingInput">Email</label>
+      <input type="email" class="form-control" id="email" name="email" required>
     </div>
 
     <!-- username -->
     <div class="form-floating" style="padding: .2em">
-        <input type="text" class="form-control" id="username" name="username" required>
       <label for="floatingInput">Username</label>
+        <input type="text" class="form-control" id="username" name="username" required>
     </div>
 
     <!-- password -->
     <div class="form-floating" style="padding: .2em">
-        <input type="password" class="form-control" id="password" name="password" required>
       <label for="floatingPassword">Password</label>
+        <input type="password" class="form-control" id="password" name="password" required>
     </div>
 
     <div class="msg">{{ msg }}</div>
@@ -172,9 +167,7 @@
 
   </form>
 
-
-
-
 </main>
   </body>
 </html>
+{% endblock %}

@@ -33,15 +33,20 @@ class Patients(db.Model):
     gender = db.Column(db.String(255), nullable=True)
     zip_code = db.Column(db.String(255), nullable=True)
     dob = db.Column(db.String(255), nullable=True)
+    contact_mobile = db.Column(db.String(255), nullable=True)
+    contact_home = db.Column(db.String(255), nullable=True)
+
 
     # this first function __init__ is to establish the class for python GUI
-    def __init__(self, mrn, first_name, last_name, zip_code, gender):
+    def __init__(self, mrn, first_name, last_name, zip_code, gender, dob, contact_mobile, contact_home):
         self.mrn = mrn
         self.first_name = first_name
         self.last_name = last_name
         self.gender = gender
         self.zipcode = zip_code
         self.DOB = dob
+        self.contact_mobile = contact_mobile
+        self.contact_home = contact_home
 
 
     # this second function is for the API endpoints to return JSON 
@@ -53,7 +58,9 @@ class Patients(db.Model):
             'last_name': self.last_name,
             'gender': self.gender,
             'zip_code': self.zipcode,
-            'dob' : self.DOB          
+            'dob' : self.DOB,
+            'contact_mobile' : self.contact_mobile,
+            'contact_home' : self.contact_home     
         }
 
 class Conditions_patient(db.Model):
@@ -219,10 +226,7 @@ class Users(db.Model):
 @app.route('/')
 def home():
     return render_template('mercy.html')
-@app.route('/portal')
-def index():
-    return render_template('portalhome.html')
-
+    
 @app.route('/signin')
 def signin():
     return render_template('login.html')
@@ -313,6 +317,7 @@ def register_patient():
     print('count of conditions loaded: ', len(db_conditions))
     print('count of medications loaded: ', len(db_medications))
 
+
     # Output message if something goes wrong...
     msg = ''
     # Check if "username", "password" and "email" POST requests exist (user submitted form)
@@ -334,10 +339,6 @@ def register_patient():
         gender = request.form['gender']
         contact_mobile = request.form['contact_mobile']
         contact_home = request.form['contact_home']
-
-        ## Fields to capture patient conditions
-        pt_conditions = request.form.getlist('conditions')
-        print('pt_conditions: ', pt_conditions)
 
         ## check if email already exists in account table or contact_mobile already exists in patient table
         account = Users.query.filter_by(email=email).first()
@@ -521,6 +522,17 @@ def create_patient():
     db.session.commit()
     return jsonify(patient.to_json()), 201
 
+@app.route('/api/conditions', methods=['POST'])
+def add_condition():
+    if not request.json:
+        abort(400)
+    condition = Conditions(
+        mrn=request.json.get('mrn'),
+        icd10_description=request.json.get('icd10_description')
+    )
+    db.session.add(condition)
+    db.session.commit()
+    return jsonify(condition.to_json()), 201
 ##### BASIC PUT ROUTES ##### [updating existing data]
 # update patient 
 @app.route('/api/patient/<string:mrn>', methods=['PUT'])
