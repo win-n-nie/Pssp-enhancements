@@ -128,9 +128,9 @@ for index, row in icd10codesShort_1k.iterrows():
 
 ### INSERTING IN PATIENT CONDITIONS
 df_pat_condition = pd.read_sql_query("SELECT mrn FROM patients", db_azure)
-df_condition = pd.read_sql_query("SELECT icd10_code FROM conditions", db_azure) 
+df_condition = pd.read_sql_query("SELECT icd10_code, icd10_description FROM conditions", db_azure) 
 # create a dataframe that is stacked and give each patient a random number of medications between 1 and 5
-df_patient_conditions = pd.DataFrame(columns=['mrn', 'icd10_code'])
+df_patient_conditions = pd.DataFrame(columns=['mrn', 'icd10_code', 'icd10_description'])
 # for each patient in df_patient_medications, take a random number of medications between 1 and 10 from df_medications and palce it in df_patient_medications
 for index, row in df_pat_condition.iterrows():
     numCondition = random.randint(1, 5)
@@ -139,12 +139,10 @@ for index, row in df_pat_condition.iterrows():
     # append the df_medications_sample to df_patient_medications
     df_patient_conditions = df_patient_conditions.append(df_con_sample)
 
-
-
-insertQuery = "INSERT INTO patient_conditions (mrn, icd10_code) VALUES (%s, %s)"
+insertQuery = "INSERT INTO patient_conditions (mrn, icd10_code, icd10_description) VALUES (%s, %s, %s)"
 
 for index, row in df_patient_conditions.iterrows():
-    db_azure.execute(insertQuery, (row['mrn'], row['icd10_code']))
+    db_azure.execute(insertQuery, (row['mrn'], row['icd10_code'], row['icd10_description']))
     print("inserted row: ", index)
 
 

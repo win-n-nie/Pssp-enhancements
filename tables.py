@@ -86,6 +86,7 @@ create table if not exists patient_conditions (
     id int auto_increment,
     mrn varchar(255),
     icd10_code varchar(255) default null,
+    icd10_description varchar(255) default null,
     PRIMARY KEY (id),
     FOREIGN KEY (mrn) REFERENCES patients(mrn) ON DELETE CASCADE,
     FOREIGN KEY (icd10_code) REFERENCES conditions(icd10_code) ON DELETE CASCADE
