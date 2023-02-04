@@ -358,7 +358,7 @@ def register_patient():
             db.session.commit()
 
             ## then loop through each condition and add to patient_conditions table after patient has been added to pt table
-            for condition in pt_conditions:
+            for condition in patient_conditions:
                 new_patient_condition = Conditions_patient(mrn, condition)
                 db.session.add(new_patient_condition)
                 db.session.commit()
@@ -465,7 +465,7 @@ def get_patient_details(mrn):
     db_conditions = Conditions.query.all()
     db_medications = Medications.query.all()
     db_procedures = Procedures.query.all()
-    return render_template("pat_det2.html", patient_details = patient_details, 
+    return render_template("patient_details.html", patient_details = patient_details, 
         patient_conditions = patient_conditions, patient_medications = patient_medications,
         patient_procedures = patient_procedures,
         db_conditions = db_conditions, db_medications = db_medications, db_procedures = db_procedures)
